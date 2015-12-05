@@ -4,13 +4,13 @@
 var enemiesArr = [];
 var enemiesCount = 10;
 var highScore = 0;
-var currScore = 0;
+var currScore = 1;
 var totalCollisons = 0;
 var gameProps = {
   width: 750,
   height: 500
 }
-var player = [{"cx" : 375, "cy" : 250, "r": 20}]
+var player = [{"cx" : 10, "cy" : 10, "r": 10}]
 var gameBoard = d3.selectAll('body').append('svg')
                   .attr('width', gameProps.width)
                   .attr('height', gameProps.height);
@@ -100,7 +100,24 @@ var updateBoard = function(enemiesArr){
   updateEnemyLocation()
   //console.log(enemiesArr[0]);
   gameBoard.selectAll('circle.enemy').data(enemiesArr)
-  .transition().duration(800)
+  .transition().duration(1000)
+  .tween("collide", function(d){
+    // var lastX = parseInt(d3.select(this).attr("cx"));
+    // var lastY =parseInt(d3.select(this).attr("cy"));
+    // var r = parseInt(d3.select(this).attr("r"))
+    //console.log(d3.select(this).attr("cx"));
+    var oldThis = this;
+    return function(){
+      var lastX = parseInt(d3.select(oldThis).attr("cx"));
+      var lastY =parseInt(d3.select(oldThis).attr("cy"));
+      var r = parseInt(d3.select(oldThis).attr("r"))
+      if(checkCollision(player[0], {"cx" : lastX, "cy" : lastY, "r" : r})){
+        currScore = 0;
+        //alert("hit!")"
+        d3.selectAll("h1").style("display", "block")
+      }
+    }
+  })
   .attr('cx', function(d) {return d.cx})
   .attr('cy', function(d) {return d.cy})
   .attr('r', function(d) {return d.r})
@@ -119,7 +136,8 @@ var checkCollision = function(player, enemy){
   var dx = player.cx - enemy.cx;
   var dy = player.cy - enemy.cy;
   var distance = Math.sqrt(dx * dx + dy * dy);
-  if(distance < player.r + enemy.r){
+  //console.log(distance)
+  if(distance < player.r + enemy.r-5){
     return true;
   } else {
     return false
@@ -130,7 +148,6 @@ var findCollision = function(){
       // console.log(player);
   for(var i=0; i<enemiesArr.length; i++){
     if(checkCollision(player[0], enemiesArr[i])){
-
       currScore = 0;
       totalCollisons++;
     }
@@ -142,6 +159,7 @@ var updateScore = function() {
   updateHighScore();
   d3.select('.highscore').selectAll('span').text(String(highScore));
   d3.select('.current').selectAll('span').text(String(currScore));
+  d3.select(".collisions").selectAll("span").text(String(totalCollisons))
 }
 
 var updateHighScore = function() {
@@ -152,12 +170,16 @@ var updateHighScore = function() {
 
 
 setInterval(function(){
+  if(currScore === 0){
+    totalCollisons++
+    d3.selectAll("h1").style("display", "none")
+  }
   updateBoard(enemiesArr);
   currScore++;
   updateScore();
 }, 1000);
 
-setInterval(function(){
-  findCollision();
-}, 100);
+// setInterval(function(){
+//   findCollision();
+// }, 100);
 
