@@ -7,13 +7,14 @@ var highScore = 0;
 var currScore = 1;
 var totalCollisons = 0;
 var gameProps = {
-  width: 750,
+  width: 1000,
   height: 500
 }
-var player = [{"cx" : 10, "cy" : 10, "r": 10}]
+var player = [{"cx" : 10, "cy" : 10, "r": 20}]
 var gameBoard = d3.selectAll('body').append('svg')
                   .attr('width', gameProps.width)
-                  .attr('height', gameProps.height);
+                  .attr('height', gameProps.height)
+                  .classed("mainSvg", true);
 
 
 //Draw the enemies in an svg element.
@@ -29,28 +30,7 @@ var updateEnemyLocation = function() {
     enemiesArr[i].cx = Math.random()*gameProps.width
     enemiesArr[i].cy = Math.random()*gameProps.height
   }
-  // var upToX = Math.random()*gameProps.width
-  // var upToY = Math.random()*gameProps.height
 
-  // for(var i=0;i<upToX;i++){
-  //   for(var j=0;j<enemiesArr.length;j++){
-  //     if(enemiesArr[j].cx >0){
-  //       enemiesArr[j].cx--;
-  //     } else{
-  //       enemiesArr[j].cx++;
-  //     }
-  //   }
-  // }
-
-  // for(var i=0;i<upToY;i++){
-  //   for(var j=0;j<enemiesArr.length;j++){
-  //     if(enemiesArr[j].cy >0){
-  //       enemiesArr[j].cy--;
-  //     } else{
-  //       enemiesArr[j].cy++;
-  //     }
-  //   }
-  // }
 }
 
 //Make a differently-colored dot to represent the player. Make it draggable.
@@ -58,16 +38,18 @@ var draggable = d3.behavior.drag();
 draggable.on('dragstart', function(){/*detect collision*/});
 
 draggable.on('drag', function(){
-  // console.log(d3.event.x);
-  // console.log(d3.event.y);
   player[0].cx = d3.event.x
   player[0].cy = d3.event.y
-  // console.log(player);
+  // if(d3.event.x < gameProps.width && d3.event.y < gameProps.height){
+  //   player[0].cx = d3.event.x
+  //   player[0].cy = d3.event.y
+  // } else {
+
+  // }
 
   gameBoard.selectAll('circle.player').data(player)
            .attr('cx', d3.event.x)
            .attr('cy', d3.event.y);
-  //cursor(player)
 })
 
 var cursor = function(data){
@@ -78,7 +60,10 @@ var cursor = function(data){
            .attr('cx', function(d) {return d.cx})
            .attr('cy', function(d) {return d.cy})
            .attr('r', function(d) {return d.r})
-           .style({fill:'red'})
+           //.style({fill:'red'})
+           .style("stroke", "black")     // displays small black dot
+           .style("stroke-width", 0.25)
+           .style({'fill': 'url(#image3)'})
            .call(draggable)
 }
 
@@ -93,7 +78,13 @@ var createBoard = function(enemiesArr){
            .attr('cx', function(d) {return d.cx})
            .attr('cy', function(d) {return d.cy})
            .attr('r', function(d) {return d.r})
-           .style({fill: 'blue'});      
+           .style("stroke", "black")     // displays small black dot
+           .style("stroke-width", 0.25)
+           .style({'fill': 'url(#image2)'});
+           //.style({fill:'blue'})
+  // gameBoard.selectAll('circle').data(enemiesArr)
+  //          .append("svg:image")
+  //          .attr("xlink:href", "zombie.png")
 }
 
 var updateBoard = function(enemiesArr){
@@ -115,6 +106,7 @@ var updateBoard = function(enemiesArr){
         currScore = 0;
         //alert("hit!")"
         d3.selectAll("h1").style("display", "block")
+        d3.select("body").classed("died", true);
       }
     }
   })
@@ -173,6 +165,7 @@ setInterval(function(){
   if(currScore === 0){
     totalCollisons++
     d3.selectAll("h1").style("display", "none")
+    d3.select("body").classed("died", false);
   }
   updateBoard(enemiesArr);
   currScore++;

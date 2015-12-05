@@ -8,3 +8,45 @@ Feel free to use it if you like. */
 .player {
   background: red;
 }
+.highscore {
+  color: silver;
+  font-weight: bolder
+}
+
+.current {
+  color: silver;
+  font-weight: bolder
+}
+
+.collisions {
+  color: silver;
+  font-weight: bolder
+}
+.died {
+  z-index: 9999;
+  background: #4C0000 !important; 
+  -webkit-filter: blur(5px) !important;
+  -moz-filter: blur(5px) !important;
+  -o-filter: blur(5px) !important;
+  -ms-filter: blur(5px) !important;
+  filter: blur(5px) !important;
+}
+.mainSvg {
+  border: solid silver 2px;
+}
+body {
+  text-align: center;
+  margin: auto;
+}
+
+h1 {
+  color: red;
+  display: none; 
+  font-size: 100px;
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  margin: 5% auto;
+  left: 0;
+  right: 0;
+}

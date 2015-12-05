@@ -3,17 +3,29 @@
   <head>
     <link rel='stylesheet' type='css' href='styles.css'>
   </head>
-  <body>
-
+  <body style ="background: url('bg.jpg'); background-repeat: none; z-index: 9999">
+      
     <div class="scoreboard">
       <!-- Modify the scoreboard when important events occur in your game! -->
-      <div class="highscore">High score: <span>0</span></div>
+      <div class="highscore" style="margin-top: 2%">High score: <span>0</span></div>
       <div class="current">Current score: <span>0</span></div>
-      <div class="collisions">Collisions: <span>0</span></div>
+      <div class="collisions" style="margin-bottom: 1%">Collisions: <span>0</span></div>
     </div>
     <div class="board"><div class="mouse"></div></div>
     <script src="lib/d3.js" charset="utf-8"></script>
     <script src='watchout.js'></script>
-    <h1 style ="color: red; display: none; text-align: center" >COLLIDED</h1>
+    <h1>DIED!!</h1>
+    <svg id = "mySvg" width = "40" height = "40">
+        <defs id= "mdef">
+          <pattern id="image2" x="0" y="0" height="40" width="40">
+              <image x = "0" y= "0" width = "40" height = "40" xlink:href="zombie.png"></image>
+          </pattern>
+        </defs>
+    <svg id = "mySvg2" width = "40" height = "40">
+        <defs id= "mdef2">
+          <pattern id="image3" x="0" y="0" height="40" width="40">
+              <image x = "0" y= "0" width = "40" height = "40" xlink:href="hellboy.png"></image>
+          </pattern>
+        </defs>
   </body>
 </html>
