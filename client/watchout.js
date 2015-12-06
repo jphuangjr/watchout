@@ -14,7 +14,9 @@ var player = [{"cx" : 10, "cy" : 10, "r": 20}]
 var gameBoard = d3.selectAll('body').append('svg')
                   .attr('width', gameProps.width)
                   .attr('height', gameProps.height)
-                  .classed("mainSvg", true);
+                  .classed("mainSvg", true)
+                  .append("g")
+
 
 
 //Draw the enemies in an svg element.
@@ -38,18 +40,17 @@ var draggable = d3.behavior.drag();
 draggable.on('dragstart', function(){/*detect collision*/});
 
 draggable.on('drag', function(){
-  player[0].cx = d3.event.x
-  player[0].cy = d3.event.y
-  // if(d3.event.x < gameProps.width && d3.event.y < gameProps.height){
-  //   player[0].cx = d3.event.x
-  //   player[0].cy = d3.event.y
-  // } else {
-
-  // }
-
-  gameBoard.selectAll('circle.player').data(player)
+  // player[0].cx = d3.event.x
+  // player[0].cy = d3.event.y
+  if(d3.event.x < 0 || d3.event.x >gameProps.width || d3.event.y < 0 || d3.event.y > gameProps.height){
+    
+  } else {
+    player[0].cx = d3.event.x
+    player[0].cy = d3.event.y
+    gameBoard.selectAll('circle.player').data(player)
            .attr('cx', d3.event.x)
            .attr('cy', d3.event.y);
+  }
 })
 
 var cursor = function(data){
@@ -65,9 +66,36 @@ var cursor = function(data){
            .style("stroke-width", 0.25)
            .style({'fill': 'url(#image3)'})
            .call(draggable)
+           
 }
 
-
+d3.select("body").on("keydown", function(){
+  console.log(d3.event.keyCode);
+  if(d3.event.keyCode === 68){
+    console.log(player[0].cx)
+    player[0].cx+=20
+    gameBoard.selectAll('circle.player').data(player)
+           .attr('cx', player[0].cx)
+  }
+  if(d3.event.keyCode === 65){
+    player[0].cx-=20;
+    gameBoard.selectAll('circle.player').data(player)
+           .attr('cx', player[0].cx)
+  }
+  if(d3.event.keyCode === 87){
+    player[0].cy-=20
+    gameBoard.selectAll('circle.player').data(player)
+           .attr('cy', player[0].cy);
+  }
+  if(d3.event.keyCode === 83){
+    player[0].cy+=20
+    gameBoard.selectAll('circle.player').data(player)
+           .attr('cy', player[0].cy);
+  }
+  
+})
+            
+           
 var createBoard = function(enemiesArr){
   cursor(player)
   gameBoard.selectAll('circle.enemy').data(enemiesArr)
@@ -78,6 +106,7 @@ var createBoard = function(enemiesArr){
            .attr('cx', function(d) {return d.cx})
            .attr('cy', function(d) {return d.cy})
            .attr('r', function(d) {return d.r})
+           // .attr("transform", 'rotate(45)')
            .style("stroke", "black")     // displays small black dot
            .style("stroke-width", 0.25)
            .style({'fill': 'url(#image2)'});
@@ -101,7 +130,8 @@ var updateBoard = function(enemiesArr){
     return function(){
       var lastX = parseInt(d3.select(oldThis).attr("cx"));
       var lastY =parseInt(d3.select(oldThis).attr("cy"));
-      var r = parseInt(d3.select(oldThis).attr("r"))
+      var r = parseInt(d3.select(oldThis).attr("r"));
+      
       if(checkCollision(player[0], {"cx" : lastX, "cy" : lastY, "r" : r})){
         currScore = 0;
         //alert("hit!")"
